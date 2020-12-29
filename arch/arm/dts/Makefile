@@ -586,7 +586,8 @@ dtb-$(CONFIG_MACH_SUN8I_R40) += \
 	sun8i-r40-bananapi-m2-ultra.dtb \
 	sun8i-v40-bananapi-m2-berry.dtb
 dtb-$(CONFIG_MACH_SUN8I_V3) += \
-	sun8i-s3-olinuxino.dtb
+	sun8i-s3-olinuxino.dtb \
+	sun8i-v3-sl631-imx179.dtb
 dtb-$(CONFIG_MACH_SUN8I_V3S) += \
 	sun8i-v3s-licheepi-zero.dtb \
 	sun8i-v3s-licheepi-zero-dock.dtb
