@@ -1,0 +1,127 @@
+/dts-v1/;
+#include "sun8i-v3.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	model = "S3-OLinuXino";
+	compatible = "olimex,s3-olinuxino", "allwinner,sun8i-s3",
+		     "allwinner,sun8i-v3";
+
+	aliases {
+		serial0 = &uart1;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led-red {
+			label = "s3-olinuxino:led:red";
+			gpios = <&pio 1 5 GPIO_ACTIVE_HIGH>; /* PB5 */
+		};
+	};
+};
+
+&emac {
+	phy-handle = <&int_mii_phy>;
+	phy-mode = "mii";
+	status = "okay";
+};
+
+&i2c0 {
+	status = "okay";
+
+	axp209: pmic@34 {
+		reg = <0x34>;
+		interrupt-parent = <&nmi_intc>;
+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+	};
+};
+
+
+
+&mmc0 {
+	vmmc-supply = <&reg_dcdc3>;
+	bus-width = <4>;
+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+	status = "okay";
+};
+
+&pio {
+	vcc-pd-supply = <&reg_dcdc3>;
+	vcc-pe-supply = <&reg_dcdc3>;
+};
+
+#include "axp209.dtsi"
+
+/* XXX: check if usb or ac is used. */
+&ac_power_supply {
+	status = "okay";
+};
+
+&battery_power_supply {
+	status = "okay";
+};
+
+&reg_dcdc2 {
+	regulator-always-on;
+	regulator-min-microvolt = <1250000>;
+	regulator-max-microvolt = <1250000>;
+	regulator-name = "vdd-sys-cpu-ephy";
+};
+
+&reg_dcdc3 {
+	regulator-always-on;
+	regulator-min-microvolt = <3300000>;
+	regulator-max-microvolt = <3300000>;
+	regulator-name = "vcc-3v3";
+};
+
+&reg_ldo1 {
+	regulator-name = "vdd-rtc";
+};
+
+&reg_ldo2 {
+	regulator-always-on;
+	regulator-min-microvolt = <3000000>;
+	regulator-max-microvolt = <3000000>;
+	regulator-name = "avcc";
+};
+
+&reg_ldo3 {
+	regulator-min-microvolt = <1200000>;
+	regulator-max-microvolt = <1200000>;
+	regulator-name = "dvdd-1v2-csi";
+};
+
+&reg_ldo4 {
+	regulator-min-microvolt = <2800000>;
+	regulator-max-microvolt = <2800000>;
+	regulator-name = "avdd-dovdd-2v8-csi";
+};
+
+/* XXX: check if usb or ac is used. */
+&usb_power_supply {
+	status = "okay";
+};
+
+&uart1 {
+	pinctrl-0 = <&uart1_pg_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&usb_otg {
+	dr_mode = "otg";
+	status = "okay";
+};
+
+&usbphy {
+	usb0_id_det-gpios = <&pio 6 9 GPIO_ACTIVE_HIGH>; /* PG9 */
+	usb0_vbus_det-gpios = <&pio 1 10 GPIO_ACTIVE_HIGH>; /* PB10 */
+	/* usb0_vbus-supply = <&reg_usb0_vbus>; */ /* TODO: from AXP */
+	status = "okay";
+};
